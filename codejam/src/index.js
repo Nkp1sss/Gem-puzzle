@@ -1,29 +1,89 @@
-import { doSomething } from './scripts/module';
+import { createElement, generateCells } from './scripts/generate';
+import { getMatrix, shuffle, setPositionItems } from './scripts/matrix';
+import { findCoordinatesByNumber, isValidForSwap, swap } from './scripts/changePosition';
 import './styles/styles.scss';
-import image from './assets/group.jpg';
-
-let img = document.createElement('img');
-img.src = image;
-document.body.appendChild(img);
 
 
+let main = createElement('main', 'main');
+let container = createElement('div', 'container');
+let field = createElement('div', 'field');
+let title = createElement('h1', 'title');
+let menu = createElement('div', 'menu');
+let newGame = createElement('button', 'menu__newGame');
+let save = createElement('button', 'menu__save');
+let results = createElement('button', 'menu__results');
+let sound = createElement('button', 'menu__sound');
+let frameSize = createElement('div', 'frameSize');
 
-doSomething();
+document.body.append(main);
+    main.append(container);
+        container.append(title);
+        container.append(menu);
+            menu.append(newGame);
+            menu.append(save);
+            menu.append(results);
+            menu.append(sound);
+        container.append(field);
+        container.append(frameSize);
 
-console.log("Hello World!");
+title.textContent = 'Gem Puzzle';
 
-for (let i = 0; i < 10; i++) {
-    console.log('dfffaaaaaaa');
-}
+newGame.textContent = 'New Game';
+newGame.classList.add('menu__button');
 
-let el = document.createElement('div');
-el.textContent = ('Element from TS');
-el.className = 'style';
-document.body.appendChild(el);
+results.textContent = 'Results';
+results.classList.add('menu__button');
+
+save.textContent = 'Save';
+save.classList.add('menu__button');
+
+sound.textContent = 'Sound';
+sound.classList.add('menu__button');
+
+let size = 4;
+frameSize.textContent = `Frame size: ${size}x${size}`;
+
+let fieldWidth = '600px';
+field.style.width = fieldWidth;
+field.style.height = field.style.width;
+field.id = 'field';
 
 
-setTimeout(() => {
-    let a = 'dsf';
-    console.log(a + b);
+/** Initial generation of cells */
+generateCells(4);
 
-}, 100)
+/** Getting an array of cells  */
+let itemNodes = Array.from(field.querySelectorAll('.cell'));
+
+/** Getting a matrix of elements  */
+let matrix = getMatrix(
+    itemNodes.map(item => Number(item.dataset.matrixId))
+);
+
+/** Shuffle */
+matrix = shuffle(matrix, itemNodes);
+
+
+/** Change position by click */
+const blankNumber = 0;
+field.addEventListener('click', event => {
+    let target = event.target.closest('div');
+    
+    if (!target)
+        return;
+
+    const targetNumber = Number(target.dataset.matrixId);
+    const targetCoords = findCoordinatesByNumber(targetNumber, matrix)
+    const blankCoords = findCoordinatesByNumber(blankNumber, matrix)
+    const isValid = isValidForSwap(targetCoords, blankCoords);
+
+    if (isValid) {
+        matrix = swap(blankCoords, targetCoords, matrix);
+        matrix = setPositionItems(matrix, itemNodes);
+    }
+})
+
+/** newGame */
+newGame.addEventListener('click', () => {
+    matrix = shuffle(matrix, itemNodes);
+})

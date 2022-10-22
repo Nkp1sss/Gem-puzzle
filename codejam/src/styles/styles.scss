@@ -1,5 +1,103 @@
-$bodyColor: chocolate;
+$bodyColor: #F6F8F7;
+$fieldColor: rgb(237, 88, 88);
+$cellColor: rgb(40, 183, 255);
+
+$fieldWidth: 600px;
+$fieldHeight: $fieldWidth;
+
+$cellWidth: 150px;
+$cellHeight: $cellWidth;
+
+*:before,
+*:after {
+    box-sizing: border-box;
+}
 
 body {
     background-color: $bodyColor;
+    margin: 0;
+    padding: 0;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.container {
+    margin: 0 auto;
+    max-width: 600px;
+}
+
+
+/* Main */
+.main {
+    .title {
+        text-align: center;
+        font-size: 80px;
+        margin-top: 20px;
+    }
+
+    .menu {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        margin-bottom: 10px;
+
+        &__button {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-size: 20px;
+            padding: 5px;
+            margin: 4px;
+            border-radius: 13px;
+            transition: 0.1s;
+            cursor: pointer;
+            border: 3px solid black;
+
+            &:hover {
+                transform: scale(1.05);
+                background-color:antiquewhite;
+            }
+        }
+    }
+
+    .field {
+        width: $fieldWidth;
+        height: $fieldHeight;
+        background-color: $fieldColor;
+        display: flex;
+        flex-flow: row wrap;
+        border-radius: 8px;
+        position: relative;
+        user-select: none;
+
+        .cell {
+            box-sizing: border-box;
+            width: $cellWidth;
+            height: $cellHeight;
+            background-color: $cellColor;
+
+            border-radius: 10px;
+            border: 3px solid black;
+            cursor: pointer;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 300%;
+            // font-size: 2rem;
+
+            position: absolute;
+            left: 0;
+            top: 0;
+
+            transition: transform 0.2s;
+            
+            &:first-child {
+                display: none;
+            }
+        }
+    }
+
+    .frameSize {
+        font-family: Georgia, 'Times New Roman', Times, serif;
+        margin-top: 20px;
+        text-align: center;
+        font-size: 24px;
+    }
 }
