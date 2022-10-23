@@ -14,6 +14,8 @@ export function generateCells(size = 4) {
         cell.style.height = cell.style.width;
         cell.textContent =  i;
         cell.setAttribute('data-matrix-id', i);
+        cell.id = i
+        cell.draggable = true;
         field.append(cell);
     }
 }

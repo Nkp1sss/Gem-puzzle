@@ -28,6 +28,9 @@ let link7_7 = createLink('7x7', 'size-7', 7);
 let link8_8 = createLink('8x8', 'size-8', 8);
 let links = [link3_3, link4_4, link5_5, link6_6, link7_7, link8_8];
 
+let myTimer;
+let countMoves = 0;
+
 
 title.textContent = 'Gem Puzzle';
 
@@ -43,8 +46,8 @@ save.classList.add('menu__button');
 sound.textContent = 'Sound';
 sound.classList.add('menu__button');
 
-timer.textContent = 'timer';
-moves.textContent = 'moves';
+timer.textContent = '00:00:00';
+moves.textContent = `moves: ${countMoves}`;
 
 let size = 4;
 
@@ -95,6 +98,7 @@ let matrix = getMatrix(
 
 /** Shuffle */
 matrix = shuffle(matrix, itemNodes);
+startTimer();
 
 /** Change position by click */
 const blankNumber = 0;
@@ -110,15 +114,38 @@ field.addEventListener('click', event => {
     const isValid = isValidForSwap(targetCoords, blankCoords);
 
     if (isValid) {
-        soundPlay();
+        countMoves++;
+        moves.textContent = `moves: ${countMoves}`;
+        if (!isSilence)
+            soundPlay();
         matrix = swap(blankCoords, targetCoords, matrix);
         matrix = setPositionItems(matrix, itemNodes);
     }
 })
 
+/** Change position (drag and drop) */ 
+///////////////////////////////////////////////////////////
+field.addEventListener('dragover', event => {
+    event.preventDefault();
+});
+
+field.addEventListener('dragstart', event => {
+    event.dataTransfer.setData('id', event.target.id);
+    event.target.append(document.getElementById('0'));
+})
+
+field.addEventListener('drop', event => {
+    let itemId = event.dataTransfer.getData('id');
+    console.log(itemId);
+    if (event.target.id != '0')
+        return;
+    event.target.append(document.getElementById(itemId));
+})
+
 /** newGame */
 newGame.addEventListener('click', () => {
     matrix = shuffle(matrix, itemNodes);
+    setDefault();
 })
 
 /** Change field size */
@@ -147,4 +174,50 @@ sizesMenu.addEventListener('click', event => {
     frameSize.textContent = `Frame size: ${size}x${size}`;
 
     activeSize(links, size);
+
+    setDefault();
 })
+
+/** sound on/off */
+let isSilence = false;
+sound.addEventListener('click', () => {
+    if (sound.innerHTML == 'Sound') {
+        sound.innerHTML = 'Silence';
+        isSilence = true;
+    }
+    else {
+        sound.innerHTML = 'Sound';
+        isSilence = false;
+    }
+})
+
+
+
+
+function startTimer() {
+    let start = Date.now();
+    let timeInSeconds;
+    myTimer = setInterval(() => {
+        let now = Date.now();
+        timeInSeconds = Math.floor((now - start) / 1000);
+        let hours = Math.floor(timeInSeconds / 3600 % 3600);
+        let minutes = Math.floor(timeInSeconds / 60 % 60);
+        let seconds = timeInSeconds % 60;
+        if (hours < 10) hours = '0' + hours;
+        if (minutes < 10) minutes = '0' + minutes;
+        if (seconds < 10) seconds = '0' + seconds;
+        timer.textContent = `${hours}:${minutes}:${seconds}`;
+    }, 1000);
+}
+
+function stopTimer() {
+    clearInterval(myTimer);
+}
+
+function setDefault() {
+    countMoves = 0;
+    moves.textContent = `moves: ${countMoves}`;
+    stopTimer();
+    timer.textContent = '00:00:00';
+    startTimer();
+}

@@ -38,18 +38,48 @@ function setNodeStyles(node, x, y) {
     node.style.transform = `translate(${x * shiftPs}%, ${y * shiftPs}%)`
 }
 
-
 export function shuffle(matrix, itemNodes) {
-    const shuffledArray = shuffleArray(matrix.flat());
+    let shuffledArray = shuffleArray(matrix.flat());
     matrix = getMatrix(shuffledArray);
     matrix = setPositionItems(matrix, itemNodes);
+
+    while (!isSolvable(matrix)) {
+        shuffledArray = shuffleArray(matrix.flat());
+        matrix = getMatrix(shuffledArray);
+        matrix = setPositionItems(matrix, itemNodes);
+    }
 
     return matrix;
 }
 
-function shuffleArray(arr) {
-    return arr
+function shuffleArray(matrix) {
+    return matrix
         .map(value => ({ value, sort: Math.random() }))
         .sort((a, b) => a.sort - b.sort)
-        .map(( { value }) => value); 
+        .map(({ value }) => value);
+}
+
+function isSolvable(matrix) {
+    let rowWithEmptyValue;
+    for (let i = 0; i < matrix.length; i++) {
+        for (let k = 0; k < matrix[i].length; k++) {
+            if (matrix[i][k] == 0)
+                rowWithEmptyValue = i;
+        }
+    }
+
+    let doubleMatrix = matrix.map(element => element);
+    doubleMatrix = doubleMatrix.flat();
+
+    let parity = 0;
+    for (let i = 0; i < doubleMatrix.length; i++) {
+        for (let j = i; j < doubleMatrix.length; j++) {
+            if (doubleMatrix[i] > doubleMatrix[j] && doubleMatrix[i] != 0 && doubleMatrix[j] != 0)
+                parity++;
+        }
+    }
+    console.log(parity);
+    if (matrix.length % 2 == 0)
+        return ((parity + rowWithEmptyValue) % 2);
+    return !(parity % 2);
 }

@@ -10,6 +10,6 @@ export function activeSize(links, size) {
 }
 
 export function soundPlay() {
-    let audio = new Audio('./assets/whoosh.mp'); // add 3
+    let audio = new Audio('./assets/whoosh.mp3'); // add 3
     audio.play();
 }
