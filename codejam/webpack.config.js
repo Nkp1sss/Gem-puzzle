@@ -42,11 +42,11 @@ const config = {
             // minify: false,  отменить минификацию (в dev сборке и так отключена, в prod сборке включена)
             // при деплое нужна будет dev сборка, поэтому не обязательный параметр.
         }),
-        // new CopyPlugin({
-        //     patterns: [
-        //         { from: "./src/assets", to: "public" },
-        //     ],
-        // }),
+        new CopyPlugin({
+            patterns: [
+                { from: "./src/assets", to: "assets" },
+            ],
+        }),
         // new CleanWebpackPlugin(), очищает всю папку dist при запуске лайв сервера
     ],
     module: {
@@ -68,6 +68,13 @@ const config = {
                 test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
                 type: 'asset',
             },
+            {
+                test: /\.(mp3|wav)$/i,
+                type: 'asset',
+                generator: {
+                    filename: 'audio/[name][ext]'
+                }
+            }
 
             // Add your rules for custom modules here
             // Learn more about loaders from https://webpack.js.org/loaders/
