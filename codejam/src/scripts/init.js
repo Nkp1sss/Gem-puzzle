@@ -17,3 +17,17 @@ export function generateCells(size = 4) {
         field.append(cell);
     }
 }
+
+export function createLink(_textContent, className, attributeValue) {
+    let link = createElement('a', 'menu__link');
+    link.textContent = _textContent;
+    link.classList.add(className);
+    link.setAttribute('data-size', attributeValue);
+    link.href = '#';
+
+    return link;
+}
+
+export function deleteCells(field) {
+    field.innerHTML = '';
+}
