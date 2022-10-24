@@ -23,11 +23,55 @@ body {
 .container {
     margin: 0 auto;
     max-width: 600px;
+    position: relative;
     
     @media screen and (max-width: 640px) {
         max-width: 300px;
     }
 }
+
+.overlay {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    opacity: 0;
+    z-index: -1;
+    background: rgba(0, 0, 0, .7);
+
+    &__active {
+        opacity: 1;
+        z-index: 1;
+    }
+}
+
+.win {
+    position: absolute;
+    left: calc(50% - 190px);
+    top: 40%;
+    width: 360px;
+    padding: 10px;
+    z-index: -1;
+    opacity: 0;
+    background-color: white;
+    text-align: center;
+    border-radius: 20px;
+    font-size: 28px;
+
+    @media screen and (max-width: 640px) {
+        left: calc(50% - 150px);
+        top: 30%;
+        width: 280px;
+        font-size: 16px;
+    }
+
+    &__active {
+        z-index: 2;
+        opacity: 1;
+    }
+}
+
 
 
 /* Main */

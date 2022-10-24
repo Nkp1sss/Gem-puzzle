@@ -29,6 +29,9 @@ let link7_7 = createLink('7x7', 'size-7', 7);
 let link8_8 = createLink('8x8', 'size-8', 8);
 let links = [link3_3, link4_4, link5_5, link6_6, link7_7, link8_8];
 
+let overlay = createElement('div', 'overlay');
+let win = createElement('div', 'win');
+
 let myTimer;
 let countMoves = 0;
 
@@ -80,9 +83,8 @@ document.body.append(main);
             sizesMenu.append(link6_6);
             sizesMenu.append(link7_7);
             sizesMenu.append(link8_8);
-
-
-
+    main.append(overlay);
+        overlay.append(win);
 
 
 
@@ -123,9 +125,11 @@ field.addEventListener('click', event => {
 
         setTimeout(() => {
             if (isWon(matrix)) {
-                alert('You won!'); // здесь модальное окно победы!
-                matrix = shuffle(matrix, itemNodes);
-                setDefault();
+                overlay.classList.add('overlay__active');
+                win.innerHTML = `Hooray!<br/>You solved the puzzle in ${timer.textContent} and ${countMoves} moves!`;
+                win.classList.add('win__active');
+
+                stopTimer();
             }
         }, 100);
     }
@@ -233,6 +237,13 @@ window.addEventListener('resize', () => {
     }
 });
 
+/** Close modal window */
+overlay.addEventListener('click', () => {
+    overlay.classList.remove('overlay__active');
+    win.classList.remove('win__active');
+    matrix = shuffle(matrix, itemNodes);
+    setDefault();
+})
 
 
 function startTimer() {
