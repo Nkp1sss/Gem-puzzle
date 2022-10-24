@@ -9,7 +9,6 @@ export function generateCells(size = 4) {
 
     for (let i = 0; i < size ** 2; i++) {
         let cell = createElement('div', 'cell'); 
-        // cell.style.width = parseInt(field.style.width, 10) / size + 'px';
         cell.style.width = 100 / size + '%';
         cell.style.height = cell.style.width;
         cell.textContent =  i;

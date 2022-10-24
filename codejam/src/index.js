@@ -125,22 +125,22 @@ field.addEventListener('click', event => {
 
 /** Change position (drag and drop) */ 
 ///////////////////////////////////////////////////////////
-field.addEventListener('dragover', event => {
-    event.preventDefault();
-});
+// field.addEventListener('dragover', event => {
+//     event.preventDefault();
+// });
 
-field.addEventListener('dragstart', event => {
-    event.dataTransfer.setData('id', event.target.id);
-    event.target.append(document.getElementById('0'));
-})
+// field.addEventListener('dragstart', event => {
+//     event.dataTransfer.setData('id', event.target.id);
+//     event.target.append(document.getElementById('0'));
+// })
 
-field.addEventListener('drop', event => {
-    let itemId = event.dataTransfer.getData('id');
-    console.log(itemId);
-    if (event.target.id != '0')
-        return;
-    event.target.append(document.getElementById(itemId));
-})
+// field.addEventListener('drop', event => {
+//     let itemId = event.dataTransfer.getData('id');
+//     console.log(itemId);
+//     if (event.target.id != '0')
+//         return;
+//     event.target.append(document.getElementById(itemId));
+// })
 
 /** newGame */
 newGame.addEventListener('click', () => {
@@ -190,7 +190,40 @@ sound.addEventListener('click', () => {
         isSilence = false;
     }
 })
+/** Window resize */
+window.addEventListener('resize', () => {
+    setDefault();
+    if (window.innerWidth <= 600) {
+        deleteCells(field);
+        fieldWidth = '300px';
+        generateCells(size);
 
+        itemNodes = Array.from(field.querySelectorAll('.cell'));
+
+        matrix = getMatrix(
+            itemNodes.map(item => Number(item.dataset.matrixId))
+        );
+
+        matrix = shuffle(matrix, itemNodes);
+
+        matrix = setPositionItems(matrix, itemNodes);
+    }
+    else {
+        deleteCells(field);
+        fieldWidth = '600px';
+        generateCells(size);
+
+        itemNodes = Array.from(field.querySelectorAll('.cell'));
+
+        matrix = getMatrix(
+            itemNodes.map(item => Number(item.dataset.matrixId))
+        );
+
+        matrix = shuffle(matrix, itemNodes);
+
+        matrix = setPositionItems(matrix, itemNodes);
+    }
+});
 
 
 
