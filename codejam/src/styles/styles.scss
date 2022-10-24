@@ -88,12 +88,12 @@ body {
 
     .menu {
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr;
+        grid-template-columns: 1.3fr 1fr 1fr 1fr 1fr;
         margin-bottom: 10px;
 
         @media screen and (max-width: 640px) {
             font-size: 14px;
-            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            grid-template-columns: 1.69fr 1fr 1fr 1fr 1fr;
         }
 
         &__button {

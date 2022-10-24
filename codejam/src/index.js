@@ -12,8 +12,9 @@ let title = createElement('h1', 'title');
 let menu = createElement('div', 'menu');
 let newGame = createElement('button', 'menu__newGame');
 let save = createElement('button', 'menu__save');
-let results = createElement('button', 'menu__results');
+let load = createElement('button', 'menu__load');
 let sound = createElement('button', 'menu__sound');
+let results = createElement('button', 'results');
 let data = createElement('div', 'data');
 let moves = createElement('div', 'data__moves');
 let timer = createElement('div', 'data__timer');
@@ -41,14 +42,17 @@ title.textContent = 'Gem Puzzle';
 newGame.textContent = 'New Game';
 newGame.classList.add('menu__button');
 
-results.textContent = 'Results';
-results.classList.add('menu__button');
+load.textContent = 'Load';
+load.classList.add('menu__button');
 
 save.textContent = 'Save';
 save.classList.add('menu__button');
 
 sound.textContent = 'Sound';
 sound.classList.add('menu__button');
+
+results.textContent = 'Results';
+results.classList.add('menu__button');
 
 timer.textContent = '00:00:00';
 moves.textContent = `moves: ${countMoves}`;
@@ -69,6 +73,7 @@ document.body.append(main);
         container.append(menu);
             menu.append(newGame);
             menu.append(save);
+            menu.append(load);
             menu.append(results);
             menu.append(sound);
         container.append(data);
