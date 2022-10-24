@@ -6,7 +6,6 @@ export function isWon(matrix) {
     }
     defaultArray.push(0);
     
-    console.log(myArray, defaultArray);
     for (let i = 0; i < defaultArray.length; i++) {
         if (defaultArray[i] != myArray[i])
             return false;

@@ -5,6 +5,7 @@ import { activeSize, soundPlay } from './scripts/settings';
 import { isWon } from './scripts/win'
 import './styles/styles.scss';
 
+console.log(localStorage.getItem('tada'));
 
 let main = createElement('main', 'main');
 let container = createElement('div', 'container');
@@ -14,7 +15,7 @@ let newGame = createElement('button', 'menu__newGame');
 let save = createElement('button', 'menu__save');
 let load = createElement('button', 'menu__load');
 let sound = createElement('button', 'menu__sound');
-let results = createElement('button', 'results');
+let results = createElement('button', 'menu__results');
 let data = createElement('div', 'data');
 let moves = createElement('div', 'data__moves');
 let timer = createElement('div', 'data__timer');
@@ -32,6 +33,12 @@ let links = [link3_3, link4_4, link5_5, link6_6, link7_7, link8_8];
 
 let overlay = createElement('div', 'overlay');
 let win = createElement('div', 'win');
+let resultsTable = createElement('div', 'results-table');
+let resultsTitle = createElement('div', 'results-title');
+let resultsNumber = createElement('div', 'results-number');
+let resultsTime = createElement('div', 'results-time');
+let resultsMoves = createElement('div', 'results-moves');
+let resultsWrapper = createElement('div', 'results-wrapper');
 
 let myTimer;
 let countMoves = 0;
@@ -56,6 +63,11 @@ results.classList.add('menu__button');
 
 timer.textContent = '00:00:00';
 moves.textContent = `moves: ${countMoves}`;
+
+resultsNumber.textContent = 'Number';
+resultsTime.textContent = 'Time';
+resultsMoves.textContent = 'Moves';
+
 
 let size = 4;
 
@@ -90,7 +102,12 @@ document.body.append(main);
             sizesMenu.append(link8_8);
     main.append(overlay);
         overlay.append(win);
-
+        overlay.append(resultsTable);
+            resultsTable.append(resultsTitle);
+                resultsTitle.append(resultsNumber);
+                resultsTitle.append(resultsTime);
+                resultsTitle.append(resultsMoves);
+            resultsTable.append(resultsWrapper);
 
 
 /** Initial generation of cells */
@@ -103,7 +120,7 @@ let itemNodes = Array.from(field.querySelectorAll('.cell'));
 let matrix = getMatrix(
     itemNodes.map(item => Number(item.dataset.matrixId))
 );
-
+localStorage.set
 /** Shuffle */
 matrix = shuffle(matrix, itemNodes);
 startTimer();
@@ -133,7 +150,7 @@ field.addEventListener('click', event => {
                 overlay.classList.add('overlay__active');
                 win.innerHTML = `Hooray!<br/>You solved the puzzle in ${timer.textContent} and ${countMoves} moves!`;
                 win.classList.add('win__active');
-
+                
                 stopTimer();
             }
         }, 100);
@@ -148,7 +165,7 @@ field.addEventListener('click', event => {
 
 // field.addEventListener('dragstart', event => {
 //     event.dataTransfer.setData('id', event.target.id);
-//     event.target.append(document.getElementById('0'));
+//     // event.target.append(document.getElementById('0'));
 // })
 
 // field.addEventListener('drop', event => {
@@ -245,14 +262,125 @@ window.addEventListener('resize', () => {
 /** Close modal window */
 overlay.addEventListener('click', () => {
     overlay.classList.remove('overlay__active');
-    win.classList.remove('win__active');
-    matrix = shuffle(matrix, itemNodes);
-    setDefault();
+    if (win.classList.contains('win__active'))
+        win.classList.remove('win__active');
+    if (resultsTable.classList.contains('results-table__active'))
+        resultsTable.classList.remove('results-table__active');
+
+    if (isWon(matrix)) {
+        saveResults();
+        matrix = shuffle(matrix, itemNodes);
+        setDefault();
+    }
 })
 
+/** Save game instance */
+save.onclick = saveLS;
 
-function startTimer() {
-    let start = Date.now();
+function saveLS() {
+    let saveObject = {
+        Size: size,
+        Matrix: matrix,
+        Moves: countMoves,
+        Time: timer.textContent,
+    }
+
+    let serialObj = JSON.stringify(saveObject);
+
+    localStorage.setItem('gameInstance', serialObj);
+}
+
+/** Load game instance */
+load.onclick = loadLS;
+
+function loadLS() {
+    if (localStorage.getItem('gameInstance') == null)
+        return;
+    let returnObject = JSON.parse(localStorage.getItem('gameInstance'));
+
+    deleteCells(field);
+
+    size = returnObject.Size;
+    countMoves = returnObject.Moves;
+
+    generateCells(size);
+
+    itemNodes = Array.from(field.querySelectorAll('.cell'));
+
+    matrix = returnObject.Matrix;
+
+    matrix = setPositionItems(matrix, itemNodes);
+
+    frameSize.textContent = `Frame size: ${size}x${size}`;
+
+    activeSize(links, size);
+
+
+    let timeArray = returnObject.Time.split(':');
+    let elapsedTime = (+timeArray[0] * 3600 + +timeArray[1] * 60 + +timeArray[2]) * 1000;
+    stopTimer();
+    startTimer(elapsedTime);
+    timer.textContent = returnObject.Time;
+    moves.textContent = `moves: ${countMoves}`;
+}
+
+/** Show results table */
+results.addEventListener('click', () => {
+    overlay.classList.add('overlay__active');
+    resultsTable.classList.add('results-table__active');
+    loadResults();
+})
+
+/** Save result after win */
+function saveResults() {
+    let arrayResults = [];
+    if (localStorage.getItem('results') == null)
+        localStorage.setItem('results', JSON.stringify(arrayResults));
+
+    arrayResults = JSON.parse(localStorage.getItem('results'));
+
+    arrayResults.push({ Moves: countMoves, Time: timer.textContent, });
+
+    localStorage.setItem('results', JSON.stringify(arrayResults));
+}
+
+/** Load result before open 'results' */
+function loadResults() {
+    if (localStorage.getItem('results') == null)
+        return;
+
+    let arrayResults = JSON.parse(localStorage.getItem('results'));
+    sortResults(arrayResults);
+
+    resultsWrapper.innerHTML = '';
+
+
+    for(let i = 0; i < arrayResults.length; i++) {
+        let resultsItem = createElement('div', 'results-item');
+        resultsWrapper.append(resultsItem);
+
+        let resultsItemNumber = createElement('div', 'results-item-number');
+        let resultsItemTime = createElement('div', 'results-item-time');
+        let resultsItemMoves = createElement('div', 'results-item-moves');
+
+        resultsItemNumber.textContent = i + 1;
+        resultsItemTime.textContent = arrayResults[i].Time;
+        resultsItemMoves.textContent = arrayResults[i].Moves;
+
+        resultsItem.append(resultsItemNumber, resultsItemTime, resultsItemMoves);
+
+        if (i == 9) 
+            break;
+    }
+}
+
+function sortResults(array) {
+    array.sort((a, b) => a.Moves - b.Moves); // сортировка по количеству мувов
+}
+
+/** Functions for timer */
+function startTimer(time = 0) {
+    let start = Date.now() - time;
     let timeInSeconds;
     myTimer = setInterval(() => {
         let now = Date.now();
@@ -277,8 +405,4 @@ function setDefault() {
     stopTimer();
     timer.textContent = '00:00:00';
     startTimer();
-}
-
-function test() {
-    
 }
