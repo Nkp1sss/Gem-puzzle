@@ -278,3 +278,7 @@ function setDefault() {
     timer.textContent = '00:00:00';
     startTimer();
 }
+
+function test() {
+    
+}
