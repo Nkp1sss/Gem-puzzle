@@ -5,7 +5,6 @@ import { activeSize, soundPlay } from './scripts/settings';
 import { isWon } from './scripts/win'
 import './styles/styles.scss';
 
-console.log(localStorage.getItem('tada'));
 
 let main = createElement('main', 'main');
 let container = createElement('div', 'container');
@@ -158,23 +157,50 @@ field.addEventListener('click', event => {
 })
 
 /** Change position (drag and drop) */ 
-///////////////////////////////////////////////////////////
-// field.addEventListener('dragover', event => {
-//     event.preventDefault();
-// });
+field.addEventListener('dragover', event => {
+    event.preventDefault();
+});
 
-// field.addEventListener('dragstart', event => {
-//     event.dataTransfer.setData('id', event.target.id);
-//     // event.target.append(document.getElementById('0'));
-// })
+field.addEventListener('dragstart', event => {
+    event.dataTransfer.setData('id', event.target.id);
+})
 
-// field.addEventListener('drop', event => {
-//     let itemId = event.dataTransfer.getData('id');
-//     console.log(itemId);
-//     if (event.target.id != '0')
-//         return;
-//     event.target.append(document.getElementById(itemId));
-// })
+field.addEventListener('drop', event => {
+    console.log(event.target.id);
+    if (event.target.id == '0') {
+        let itemId = event.dataTransfer.getData('id');
+        let trg = document.getElementById(itemId);
+        const targetNumber = Number(trg.dataset.matrixId);
+        const targetCoords = findCoordinatesByNumber(targetNumber, matrix)
+        const blankCoords = findCoordinatesByNumber(blankNumber, matrix)
+        const isValid = isValidForSwap(targetCoords, blankCoords);
+
+        if (isValid) {
+            countMoves++;
+            moves.textContent = `moves: ${countMoves}`;
+            if (!isSilence)
+                soundPlay();
+            matrix = swap(blankCoords, targetCoords, matrix);
+            matrix = setPositionItems(matrix, itemNodes);
+
+            setTimeout(() => {
+                if (isWon(matrix)) {
+                    overlay.classList.add('overlay__active');
+                    win.innerHTML = `Hooray!<br/>You solved the puzzle in ${timer.textContent} and ${countMoves} moves!`;
+                    win.classList.add('win__active');
+
+                    stopTimer();
+                }
+            }, 100);
+        }
+    }
+
+    // console.log(itemId);
+    // if (event.target.id != '0')
+    //     return;
+    // event.target.remove(document.getElementById('0'))
+    // event.target.append(document.getElementById(itemId));
+})
 
 /** newGame */
 newGame.addEventListener('click', () => {

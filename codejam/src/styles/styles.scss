@@ -215,7 +215,7 @@ body {
             }
             
             &:first-child {
-                display: none;
+                opacity: 0;
             }
         }
     }
