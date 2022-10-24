@@ -2,6 +2,7 @@ import { createElement, generateCells, deleteCells, createLink } from './scripts
 import { getMatrix, shuffle, setPositionItems } from './scripts/matrix';
 import { findCoordinatesByNumber, isValidForSwap, swap } from './scripts/changePosition';
 import { activeSize, soundPlay } from './scripts/settings';
+import { isWon } from './scripts/win'
 import './styles/styles.scss';
 
 
@@ -104,7 +105,6 @@ startTimer();
 const blankNumber = 0;
 field.addEventListener('click', event => {
     let target = event.target.closest('div');
-    
     if (!target)
         return;
 
@@ -120,6 +120,14 @@ field.addEventListener('click', event => {
             soundPlay();
         matrix = swap(blankCoords, targetCoords, matrix);
         matrix = setPositionItems(matrix, itemNodes);
+
+        setTimeout(() => {
+            if (isWon(matrix)) {
+                alert('You won!'); // здесь модальное окно победы!
+                matrix = shuffle(matrix, itemNodes);
+                setDefault();
+            }
+        }, 100);
     }
 })
 

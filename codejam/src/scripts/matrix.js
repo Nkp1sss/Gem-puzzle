@@ -78,7 +78,7 @@ function isSolvable(matrix) {
                 parity++;
         }
     }
-    console.log(parity);
+    
     if (matrix.length % 2 == 0)
         return ((parity + rowWithEmptyValue) % 2);
     return !(parity % 2);
