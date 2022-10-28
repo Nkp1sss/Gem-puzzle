@@ -14,5 +14,7 @@ module.exports = {
     "linebreak-style": ["error", "windows"],
     "indent": ["error", 4],
     'no-plusplus': 'off',
+    "no-param-reassign": 0,
+    'object-curly-newline': 0,
   },
 };

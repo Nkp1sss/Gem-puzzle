@@ -39,8 +39,7 @@ const config = {
             template: './src/index.html',
             chunks: ['index'], // какие скрипты подключать к странице
             inject: 'body', // вставить скрипт в конец тега body
-            // minify: false,  отменить минификацию (в dev сборке и так отключена, в prod сборке включена)
-            // при деплое нужна будет dev сборка, поэтому не обязательный параметр.
+            // minify: false,  отменить минификацию
         }),
         new CopyPlugin({
             patterns: [
@@ -75,9 +74,6 @@ const config = {
                     filename: 'audio/[name][ext]'
                 }
             }
-
-            // Add your rules for custom modules here
-            // Learn more about loaders from https://webpack.js.org/loaders/
         ],
     },
     resolve: {

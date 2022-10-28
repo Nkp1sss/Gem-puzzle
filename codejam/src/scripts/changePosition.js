@@ -1,21 +1,24 @@
 export function findCoordinatesByNumber(number, matrix) {
     for (let y = 0; y < matrix.length; y++) {
         for (let x = 0; x < matrix[y].length; x++) {
-            if (matrix[y][x] == number)
-                return {x, y};
+            if (matrix[y][x] === number) {
+                return { x, y };
+            }
         }
     }
     return null;
 }
 
 export function isValidForSwap(coords1, coords2) {
-    if (coords1.x === coords2.x) {  
-        if (Math.abs(coords1.y - coords2.y) == 1)
+    if (coords1.x === coords2.x) {
+        if (Math.abs(coords1.y - coords2.y) === 1) {
             return true;
+        }
     }
-    if (coords1.y === coords2.y) {  
-        if (Math.abs(coords1.x - coords2.x) == 1)
+    if (coords1.y === coords2.y) {
+        if (Math.abs(coords1.x - coords2.x) === 1) {
             return true;
+        }
     }
     return false;
 }

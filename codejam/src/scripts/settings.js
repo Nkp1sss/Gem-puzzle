@@ -1,15 +1,16 @@
 export function activeSize(links, size) {
-    links.forEach(link => {
+    links.forEach((link) => {
         link.classList.remove('active');
     });
 
-    links.forEach(link => {
-        if (+link.dataset.size == size)
+    links.forEach((link) => {
+        if (+link.dataset.size === size) {
             link.classList.add('active');
+        }
     });
 }
 
 export function soundPlay() {
-    let audio = new Audio('./assets/whoosh.mp3'); // add 3
+    const audio = new Audio('./assets/whoosh.mp3');
     audio.play();
 }
